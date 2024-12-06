@@ -82,42 +82,69 @@ public class SortMethods {
 	 *	@param arr		array of Integer objects to sort
 	 */
 	public void mergeSort(Integer [] arr) {
-		int n = arr.length;
-		Integer[] temp = new Integer[n];
-		recursiveSort(a, 0, n-1);
-		
-	}
-	
-	public void recursiveSort(Integer[] a, int from, int to);
-	{
-		if (to - from < 2) // Base case: 1 or 2 elements
-		{
-			if (to > from && a[to] < a[from])
-			{
-				// swap a[to] and a[from]
-				swap(a, to, from);
-			}
-		} else 
-		{
-			int middle = (from + to) / 2;
-			recursiveSort(a, from, middle);
-			recursiveSort(a, middle + 1, to);
-			merge(a, from, middle, to);
+		int arrayLength = arr.length;
+
+		if (arrayLength < 2) { // 1 element arrays is already sorted
+			return;
 		}
+
+		// finding midpoint
+		int midIndex = arrayLength / 2;
+
+		Integer[] leftHalf = new Integer[midIndex];
+		// accounting for odd number of elements
+		Integer[] rightHalf = new Integer[arrayLength - midIndex]; 
+
+		// filling temporary arrays with values 
+		for (int i = 0; i < midIndex; i++) {
+			leftHalf[i] = arr[i];
+		}
+		for (int i = midIndex; i < arrayLength; i++) {
+			rightHalf[i - midIndex] = arr[i];
+		}
+		mergeSort(leftHalf); 
+		mergeSort(rightHalf);
+
+		merge(arr, leftHalf, rightHalf);
 	}
 	
-	public void merge(Integer[] a, int from, int middle, int to) 
-	{
-		int i = from, j = middle + 1, k = from;
+	private void merge(Integer[] arr, Integer[] leftHalf, Integer[] rightHalf) {
+		int leftSize = leftHalf.length;
+		int rightSize = rightHalf.length;
+
+		// i -> pointer for left half
+		// j -> pointer for right half
+		// k -> pointer for merged half
+		int i = 0, j = 0, k = 0;
+
+		while (i < leftSize && j < rightSize) {
+			if (leftHalf[i] <= rightHalf[j]) {
+				arr[k] = leftHalf[i];
+				i++;
+			} else {
+				arr[k] = rightHalf[j];
+				j++;
+			}
+			k++;
+		}
 		
-		// While both arrays have elements left unprocessed:
-		while ( i <= middle && j <= to)
+		// 1 left over in left array
+		while (i < leftSize) {
+			arr[k] = leftHalf[i];
+			i++;
+			k++;
+		}
+			
+		// 1 left over in right array
+		while (j < rightSize) {
+			arr[k] = rightHalf[j];
+			j++;
+			k++;
+		}
 		
 	}
-	
-	
-	public 
-	
+
+
 	/*****************************************************************/
 	/************************* For Testing ***************************/
 	/*****************************************************************/
@@ -176,8 +203,7 @@ public class SortMethods {
 		System.out.println("Array after sort:");
 		printArray(arr);
 		System.out.println();
-
-/*		
+	
 		for (int a = 0; a < 10; a++)
 			arr[a] = (int)(Math.random() * 100) + 1;
 		System.out.println("\nMerge Sort");
@@ -188,6 +214,5 @@ public class SortMethods {
 		System.out.println("Array after sort:");
 		printArray(arr);
 		System.out.println();
-*/
 	}
 }
